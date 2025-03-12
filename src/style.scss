@@ -1,0 +1,54 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  user-select: none;
+
+  body {
+    @apply m-0 p-0 w-screen h-screen;
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    @apply w-full h-full;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+}
+
+.thin-scrollbar {
+  /* Firefox 和 Edge 滑块样式 */
+  scrollbar-width: thin;
+  scrollbar-color: #eee transparent;
+
+  /* Edge 隐藏滚动条阴影 */
+  -ms-overflow-style: none;
+
+  /* Firefox 和 Edge */
+  scrollbar-track-color: transparent;
+
+  /* 隐藏轨道，使其透明 */
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  /* 宽度和颜色 */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* 滑块样式 */
+  &::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 3px;
+  }
+}

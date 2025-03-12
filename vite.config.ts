@@ -33,5 +33,10 @@ export default defineConfig({
         ? undefined
         : {}
     })
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  }
 })

@@ -3,7 +3,9 @@ import ArcoVueIcon from '@arco-design/web-vue/es/icon'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { router } from './router'
-import './style.css'
+import '@arco-design/web-vue/dist/arco.css'
+import 'virtual:uno.css'
+import './style.scss'
 
 const app = createApp(App)
 

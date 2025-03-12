@@ -19,6 +19,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
+    "sass": "^1.85.1",
     "typescript": "^5.2.2",
     "unocss": "66.1.0-beta.3",
     "unplugin-vue-router": "^0.12.0",

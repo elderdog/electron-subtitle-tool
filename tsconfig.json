@@ -9,6 +9,8 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+
+    "types": ["vite-plugin-vue-layouts/client"],
     "allowImportingTsExtensions": true,
 
     /* Linting */
