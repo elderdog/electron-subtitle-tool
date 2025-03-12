@@ -1,0 +1,36 @@
+{
+  "name": "electron-subtitle-tool",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build && electron-builder",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.21",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.8.1",
+    "@arco-design/web-vue": "^2.57.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "electron": "^30.0.1",
+    "electron-builder": "^24.13.3",
+    "typescript": "^5.2.2",
+    "unocss": "66.1.0-beta.3",
+    "unplugin-vue-router": "^0.12.0",
+    "vite": "^5.1.6",
+    "vite-plugin-electron": "^0.28.6",
+    "vite-plugin-electron-renderer": "^0.14.5",
+    "vite-plugin-vue-layouts": "^0.11.0",
+    "vue-tsc": "^2.0.26"
+  },
+  "lint-staged": {
+    "**/*": [
+      "eslint"
+    ]
+  }
+}
