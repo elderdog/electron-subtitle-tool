@@ -6,7 +6,7 @@ const SUBTITLE_EXTS = ['.srt', '.ass']
 
 // 格式化内容，返回字幕块数据
 function formatContentToBlocks(content: string) {
-  const lines = content.split(/\n+/).filter(line => line.length > 0)
+  const lines = content.replace(/\r\n/g, '\n').split(/\n+/).filter(line => line.length > 0)
   const blocks = []
   for (let i = 0; i < lines.length; i += 3) {
     blocks.push({
@@ -20,7 +20,7 @@ function formatContentToBlocks(content: string) {
 
 // 格式化内容，返回字幕行数据
 function formatContentToLines(content: string) {
-  return content.split(/\n+/).filter(line => line.length > 0)
+  return content.replace(/\r\n/g, '\n').split(/\n+/).filter(line => line.length > 0)
 }
 
 // 获取指定目录下的字幕文件列表

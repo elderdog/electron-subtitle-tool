@@ -4,7 +4,8 @@ import { useRouter } from 'vue-router/auto'
 const router = useRouter()
 const buttons = [
   { title: 'Browser', path: '/browser' },
-  { title: 'Compare', path: '/compare' }
+  { title: 'Compare', path: '/compare' },
+  { title: 'Usage', path: '/usage' }
 ]
 const activeRouteClass = 'important-bg-[#434866] important-text-[#138BEC]'
 
@@ -26,7 +27,11 @@ function isActive(path: string) {
       </a-button>
     </a-layout-sider>
     <a-layout-content>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </a-layout-content>
   </a-layout>
 </template>
