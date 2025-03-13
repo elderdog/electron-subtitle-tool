@@ -58,11 +58,11 @@ function onContentScroll(event: Event) {
 </script>
 
 <template>
-  <div class="flex flex-row h-full">
+  <div class="flex flex-row justify-between h-full">
     <div
       v-for="side in ['left', 'right']"
       :key="side"
-      class="flex flex-col w-50% m-10px p-[5px_0_0_10px] b-amber b-1px b-solid rd-10px"
+      class="flex flex-col box-border w-[calc(50%-5px)] p-[5px_0_0_10px] b-gray-3 b-1px b-solid rd-10px"
     >
       <a-button class="w-100px mb-5px" @click="handleChooseFile(side)">
         Choose

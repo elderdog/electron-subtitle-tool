@@ -39,12 +39,12 @@ function handleView(record: { name: string, path: string }) {
 </script>
 
 <template>
-  <div class="flex flex-col h-full p-10px box-border overflow-hidden">
+  <div class="flex flex-col h-full box-border overflow-hidden">
     <div class="shrink-0">
       <a-button @click="handleChoose">
         Choose Folder
       </a-button>
-      <p>Folder Path: {{ folderPath || '--' }}</p>
+      <p>Folder Path: <span class="text-gray-6">{{ folderPath || '--' }}</span></p>
     </div>
     <a-table
       v-if="folderPath"

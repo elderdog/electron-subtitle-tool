@@ -7,7 +7,6 @@ const buttons = [
   { title: 'Compare', path: '/compare' },
   { title: 'Usage', path: '/usage' }
 ]
-const activeRouteClass = 'important-bg-[#434866] important-text-[#138BEC]'
 
 function isActive(path: string) {
   return router.currentRoute.value.path === path
@@ -16,17 +15,18 @@ function isActive(path: string) {
 
 <template>
   <a-layout class="w-full h-full">
-    <a-layout-sider style="width: 100px; background-color: rgb(var(--cyan-6));">
-      <a-button
+    <a-layout-sider style="width: 120px;" class="bg-gray-2 pt-5px">
+      <div
         v-for="btn in buttons"
         :key="btn.title"
-        :class="isActive(btn.path) ? activeRouteClass : ''" type="text" size="large" class="route-btn m-t-[16px]"
+        :class="isActive(btn.path) ? 'bg-gray-3 font-bold' : 'hover:bg-gray-3/50'"
+        class="m-5px p-[5px_10px] cursor-pointer lh-20px rd-4px text-gray-9"
         @click="router.push(btn.path)"
       >
         {{ btn.title }}
-      </a-button>
+      </div>
     </a-layout-sider>
-    <a-layout-content>
+    <a-layout-content class="p-10px">
       <router-view v-slot="{ Component }">
         <keep-alive>
           <component :is="Component" />

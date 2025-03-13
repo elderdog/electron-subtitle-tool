@@ -1,5 +1,5 @@
 <template>
-  <a-typography class="m-10px">
+  <a-typography>
     <a-typography-title :heading="5">
       Shortcut
     </a-typography-title>
