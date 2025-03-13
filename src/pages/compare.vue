@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+const leftFilepath = ref<string | undefined>()
+const rightFilepath = ref<string | undefined>()
 const leftLines = ref<string[]>([])
 const rightLines = ref<string[]>([])
 const diffLineNumbers = computed(() => {
@@ -8,13 +10,46 @@ const diffLineNumbers = computed(() => {
 })
 
 function handleChooseFile(side: string) {
-  const lines: string[] = window.ipcRenderer.sendSync('dialog:choose_file')
+  type Data = { path: string, lines: string[] } | null
+  const data: Data = window.ipcRenderer.sendSync('dialog:choose_file')
+  if (!data)
+    return
   switch (side) {
     case 'left':
-      leftLines.value = lines
+      leftFilepath.value = data.path
+      leftLines.value = data.lines
       break
     case 'right':
-      rightLines.value = lines
+      rightFilepath.value = data.path
+      rightLines.value = data.lines
+      break
+  }
+}
+
+function handleReload(side: string) {
+  switch (side) {
+    case 'left':
+      if (!leftFilepath.value)
+        return
+      leftLines.value = window.ipcRenderer.sendSync('file:get_content_lines', leftFilepath.value)
+      break
+    case 'right':
+      if (!rightFilepath.value)
+        return
+      rightLines.value = window.ipcRenderer.sendSync('file:get_content_lines', rightFilepath.value)
+      break
+  }
+}
+
+function handleClear(side: string) {
+  switch (side) {
+    case 'left':
+      leftFilepath.value = undefined
+      leftLines.value = []
+      break
+    case 'right':
+      rightFilepath.value = undefined
+      rightLines.value = []
       break
   }
 }
@@ -64,9 +99,17 @@ function onContentScroll(event: Event) {
       :key="side"
       class="flex flex-col box-border w-[calc(50%-5px)] p-[5px_0_0_10px] b-gray-3 b-1px b-solid rd-10px"
     >
-      <a-button class="w-100px mb-5px" @click="handleChooseFile(side)">
-        Choose
-      </a-button>
+      <div class="mb-5px">
+        <a-button @click="handleChooseFile(side)">
+          Choose
+        </a-button>
+        <a-button class="ml-5px" @click="handleReload(side)">
+          Reload
+        </a-button>
+        <a-button class="ml-5px" @click="handleClear(side)">
+          Clear
+        </a-button>
+      </div>
       <div
         :id="side === 'left' ? 'leftScroll' : 'rightScroll'"
         class="grow overflow-x-hidden overflow-y-auto"

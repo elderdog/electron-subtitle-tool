@@ -1,3 +1,4 @@
+import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { clipboard, dialog, globalShortcut, ipcMain } from 'electron'
@@ -49,9 +50,12 @@ function chooseFile() {
     filters: [{ name: 'Subtitle', extensions: ['srt', 'ass'] }]
   })
   if (!files)
-    return []
+    return null
   const content = fs.readFileSync(files[0], 'utf-8')
-  return formatContentToLines(content)
+  return {
+    path: files[0],
+    lines: formatContentToLines(content)
+  }
 }
 
 // 拷贝指定文件的文本内容
@@ -63,6 +67,11 @@ function copyContentFromFile(filepath: string) {
 function getContentBlocks(filepath: string) {
   const content = fs.readFileSync(filepath, 'utf-8')
   return formatContentToBlocks(content)
+}
+
+function getContentLines(filepath: string) {
+  const content = fs.readFileSync(filepath, 'utf-8')
+  return formatContentToLines(content)
 }
 
 function saveClipboardContentToFile() {
@@ -84,6 +93,33 @@ function saveClipboardContentToFile() {
   })
 }
 
+function openFileViaSublime(filepath: string) {
+  const sublimeExecutable = '/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'
+  if (!fs.existsSync(sublimeExecutable)) {
+    dialog.showMessageBox({
+      type: 'error',
+      message: '🚫 Sublime Text not found'
+    })
+    return
+  }
+
+  const args = ['--new-window', filepath]
+  try {
+    const child = spawn(sublimeExecutable, args)
+    child.on('error', err => {
+      dialog.showMessageBox({
+        type: 'error',
+        message: `🚫 Open Sublime Text failed\n\n${err.message}`
+      })
+    })
+  } catch (err) {
+    dialog.showMessageBox({
+      type: 'error',
+      message: `🚫 Open Sublime Text failed\n\n${(err as any).message}`
+    })
+  }
+}
+
 export function registerHandler() {
   const key = 'CommandOrControl+Shift+J'
   globalShortcut.register(key, saveClipboardContentToFile)
@@ -98,6 +134,14 @@ export function registerHandler() {
 
   ipcMain.on('file:get_content_blocks', (event: Electron.IpcMainEvent, filepath: string) => {
     event.returnValue = getContentBlocks(filepath)
+  })
+
+  ipcMain.on('file:get_content_lines', (event: Electron.IpcMainEvent, filepath: string) => {
+    event.returnValue = getContentLines(filepath)
+  })
+
+  ipcMain.on('file:open_via_sublime', (event: Electron.IpcMainEvent, filepath: string) => {
+    event.returnValue = openFileViaSublime(filepath)
   })
 
   ipcMain.on('dialog:choose_folder', (event: Electron.IpcMainEvent) => {
