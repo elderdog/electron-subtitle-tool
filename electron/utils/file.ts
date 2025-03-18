@@ -4,17 +4,32 @@ import path from 'node:path'
 import { clipboard, dialog, globalShortcut, ipcMain } from 'electron'
 
 const SUBTITLE_EXTS = ['.srt', '.ass']
+const ID_REG = /^\d+\s*$/
+const TIME_REG = /^\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}\s*/
 
 // 格式化内容，返回字幕块数据
 function formatContentToBlocks(content: string) {
-  const lines = content.replace(/\r\n/g, '\n').split(/\n+/).filter(line => line.length > 0)
+  const lines = formatContentToLines(content)
   const blocks = []
-  for (let i = 0; i < lines.length; i += 3) {
-    blocks.push({
-      id: lines[i],
-      time: lines[i + 1],
-      text: lines[i + 2]
-    })
+  for (let i = 0; i < lines.length;) {
+    const current = lines[i]
+    const next = lines[i + 1]
+    if (current && next && ID_REG.test(current) && TIME_REG.test(next)) {
+      let text = ''
+      if (lines[i + 3] && TIME_REG.test(lines[i + 3])) {
+        i += 2
+      } else {
+        text = lines[i + 2]
+        i += 3
+      }
+      blocks.push({
+        id: current,
+        time: next,
+        text
+      })
+    } else {
+      i++
+    }
   }
   return blocks
 }
@@ -54,7 +69,7 @@ function chooseFile() {
   const content = fs.readFileSync(files[0], 'utf-8')
   return {
     path: files[0],
-    lines: formatContentToLines(content)
+    blocks: formatContentToBlocks(content)
   }
 }
 
@@ -69,11 +84,6 @@ function getContentBlocks(filepath: string) {
   return formatContentToBlocks(content)
 }
 
-function getContentLines(filepath: string) {
-  const content = fs.readFileSync(filepath, 'utf-8')
-  return formatContentToLines(content)
-}
-
 function saveClipboardContentToFile() {
   const content = clipboard.readText()
   const destPath = dialog.showSaveDialogSync({
@@ -84,7 +94,7 @@ function saveClipboardContentToFile() {
   if (!destPath)
     return
   const data = formatContentToBlocks(content).map(block => {
-    return `${block.id}\n${block.time}\n${block.text}`
+    return `${block.id}\n${block.time}\n${block.text || ''}`
   }).join('\n\n')
   fs.writeFileSync(destPath, data)
   dialog.showMessageBox({
@@ -134,10 +144,6 @@ export function registerHandler() {
 
   ipcMain.on('file:get_content_blocks', (event: Electron.IpcMainEvent, filepath: string) => {
     event.returnValue = getContentBlocks(filepath)
-  })
-
-  ipcMain.on('file:get_content_lines', (event: Electron.IpcMainEvent, filepath: string) => {
-    event.returnValue = getContentLines(filepath)
   })
 
   ipcMain.on('file:open_via_sublime', (event: Electron.IpcMainEvent, filepath: string) => {
