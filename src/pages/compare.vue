@@ -119,6 +119,9 @@ function onContentScroll(event: Event) {
         :key="side"
         class="flex flex-col box-border w-[calc(50%-5px)] p-[5px_0_0_10px] b-gray-3 b-1px b-solid rd-10px"
       >
+        <p class="m-[0_0_5px]">
+          📝: <span class="text-gray-6">{{ side === 'left' ? leftFilepath || '--' : rightFilepath || '--' }}</span>
+        </p>
         <div class="mb-5px">
           <a-button @click="handleChooseFile(side)">
             Choose
