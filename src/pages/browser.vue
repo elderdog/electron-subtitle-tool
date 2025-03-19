@@ -71,10 +71,12 @@ function handleOpen(record: { name: string, path: string }) {
     <a-table
       v-if="folderPath"
       class="grow"
+      row-key="name"
       :columns="columns"
       :data="fileList"
       :pagination="false"
       :scroll="{ y: '10%' }"
+      :row-selection="{ type: 'radio' }"
     >
       <template #operate="{ record }">
         <a-button @click="handleCopy(record)">
